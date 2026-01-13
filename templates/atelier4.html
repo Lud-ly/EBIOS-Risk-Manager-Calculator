@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %}Atelier 4 - Scénarios opérationnels{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('atelier2') }}">Atelier 2</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('atelier3') }}">Atelier 3</a></li>
+                <li class="breadcrumb-item active">Atelier 4</li>
+            </ol>
+        </nav>
+
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h2 class="mb-0">
+                    <i class="bi bi-4-circle"></i> Atelier 4 - Scénarios opérationnels
+                </h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('atelier4') }}">
+                    
+                    <!-- SECTION 1: Chemins d'attaque -->
+                    <div class="form-section">
+                        <h4><i class="bi bi-arrow-right-circle text-danger"></i> Chemins d'attaque</h4>
+                        <hr>
+                        <p class="text-muted">Identifiez les modes opératoires et les chemins d'attaque possibles</p>
+                        
+                        <div id="chemins-container">
+                            <div class="chemin-row border rounded p-3 mb-3" style="background-color: #ffebee;">
+                                <div class="row mb-3">
+                                    <div class="col-md-8">
+                                        <label class="form-label">Description du chemin d'attaque</label>
+                                        <input type="text" name="chemin_desc" class="form-control"
+                                               placeholder="Ex: Phishing → Compromission poste → Élévation privilèges → Exfiltration">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Vraisemblance (1-4)</label>
+                                        <select name="chemin_vraisemblance" class="form-select">
+                                            <option value="1">1 - Improbable</option>
+                                            <option value="2">2 - Possible</option>
+                                            <option value="3" selected>3 - Probable</option>
+                                            <option value="4">4 - Très probable</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Point d'entrée</label>
+                                        <input type="text" name="chemin_entree" class="form-control"
+                                               placeholder="Ex: Email de phishing">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Cible finale</label>
+                                        <input type="text" name="chemin_cible" class="form-control"
+                                               placeholder="Ex: Base de données clients">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="ajouterChemin()">
+                            <i class="bi bi-plus-circle"></i> Ajouter un chemin d'attaque
+                        </button>
+                    </div>
+
+                    <!-- SECTION 2: Scénarios opérationnels -->
+                    <div class="form-section">
+                        <h4><i class="bi bi-diagram-3 text-warning"></i> Scénarios opérationnels détaillés</h4>
+                        <hr>
+                        <p class="text-muted">Décrivez les scénarios d'attaque complets (étape par étape)</p>
+                        
+                        <div id="scenarios-container">
+                            <div class="scenario-row border rounded p-3 mb-3" style="background-color: #fff8e1;">
+                                <div class="row mb-3">
+                                    <div class="col-md-9">
+                                        <label class="form-label">Nom du scénario</label>
+                                        <input type="text" name="scenario_nom" class="form-control"
+                                               placeholder="Ex: Attaque par ransomware via phishing">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Gravité (1-4)</label>
+                                        <select name="scenario_gravite" class="form-select">
+                                            <option value="1">1 - Négligeable</option>
+                                            <option value="2">2 - Limitée</option>
+                                            <option value="3">3 - Importante</option>
+                                            <option value="4" selected>4 - Critique</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Déroulé du scénario (étapes)</label>
+                                        <textarea name="scenario_deroulement" class="form-control" rows="3"
+                                                  placeholder="1. Envoi email phishing&#10;2. Ouverture pièce jointe malveillante&#10;3. Exécution ransomware&#10;4. Chiffrement des données"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Techniques MITRE ATT&CK</label>
+                                        <input type="text" name="scenario_mitre" class="form-control"
+                                               placeholder="Ex: T1566.001, T1486, T1486">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Indicateurs de compromission (IoC)</label>
+                                        <input type="text" name="scenario_ioc" class="form-control"
+                                               placeholder="Ex: Hash MD5, domaine C2, IP suspecte">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-warning btn-sm" onclick="ajouterScenario()">
+                            <i class="bi bi-plus-circle"></i> Ajouter un scénario opérationnel
+                        </button>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('atelier3') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+                        <button type="submit" class="btn btn-dark btn-lg">
+                            Sauvegarder et continuer <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="alert alert-info mt-4">
+            <i class="bi bi-lightbulb"></i>
+            <strong>Astuce :</strong> Utilisez le framework <a href="https://attack.mitre.org/" target="_blank">MITRE ATT&CK</a> 
+            pour référencer les techniques d'attaque.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function ajouterChemin() {
+    const container = document.getElementById('chemins-container');
+    const newChemin = `
+        <div class="chemin-row border rounded p-3 mb-3" style="background-color: #ffebee;">
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <label class="form-label">Description du chemin d'attaque</label>
+                    <input type="text" name="chemin_desc" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Vraisemblance (1-4)</label>
+                    <select name="chemin_vraisemblance" class="form-select">
+                        <option value="1">1 - Improbable</option>
+                        <option value="2">2 - Possible</option>
+                        <option value="3" selected>3 - Probable</option>
+                        <option value="4">4 - Très probable</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">Point d'entrée</label>
+                    <input type="text" name="chemin_entree" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Cible finale</label>
+                    <input type="text" name="chemin_cible" class="form-control">
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newChemin);
+}
+
+function ajouterScenario() {
+    const container = document.getElementById('scenarios-container');
+    const newScenario = `
+        <div class="scenario-row border rounded p-3 mb-3" style="background-color: #fff8e1;">
+            <div class="row mb-3">
+                <div class="col-md-9">
+                    <label class="form-label">Nom du scénario</label>
+                    <input type="text" name="scenario_nom" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Gravité (1-4)</label>
+                    <select name="scenario_gravite" class="form-select">
+                        <option value="1">1 - Négligeable</option>
+                        <option value="2">2 - Limitée</option>
+                        <option value="3">3 - Importante</option>
+                        <option value="4" selected>4 - Critique</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label class="form-label">Déroulé du scénario (étapes)</label>
+                    <textarea name="scenario_deroulement" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">Techniques MITRE ATT&CK</label>
+                    <input type="text" name="scenario_mitre" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Indicateurs de compromission (IoC)</label>
+                    <input type="text" name="scenario_ioc" class="form-control">
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newScenario);
+}
+</script>
+{% endblock %}

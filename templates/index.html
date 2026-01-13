@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - EBIOS Risk Manager{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="text-center mb-5">
+            <h1 class="display-4">
+                <i class="bi bi-shield-check text-dark"></i>
+                EBIOS Risk Manager
+            </h1>
+            <p class="lead text-muted">
+                Outil d'analyse de risques cyber selon la méthodologie ANSSI
+            </p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <!-- Nouvelle analyse -->
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-5">
+                        <i class="bi bi-plus-circle display-1 text-dark mb-3"></i>
+                        <h3>Nouvelle analyse</h3>
+                        <p class="text-muted">Démarrer une nouvelle étude EBIOS RM</p>
+                        <a href="{{ url_for('atelier1') }}" class="btn btn-success btn-lg mt-3">
+                            <i class="bi bi-play-fill"></i> Commencer
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analyses existantes -->
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-5">
+                        <i class="bi bi-folder-open display-1 text-dark mb-3"></i>
+                        <h3>Mes analyses</h3>
+                        <p class="text-muted">
+                            <span class="badge bg-dark fs-5">{{ analyses|length }}</span> 
+                            analyse(s) enregistrée(s)
+                        </p>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-dark btn-lg mt-3">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info méthodologie -->
+        <div class="card border-dark">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-info-circle"></i> À propos d'EBIOS Risk Manager
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>EBIOS Risk Manager</strong> est la méthode de référence de l'ANSSI pour 
+                    l'analyse et le traitement des risques numériques. Elle permet d'apprécier 
+                    les risques de cybersécurité et de construire un plan d'action adapté.
+                </p>
+                
+                <h6 class="mt-4"><i class="bi bi-list-ol"></i> Les 5 ateliers :</h6>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <span class="badge bg-dark">1</span>
+                            <strong> Cadrage et socle de sécurité</strong>
+                            <p class="small text-muted mb-0">Définir le périmètre et les missions critiques</p>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-dark">2</span>
+                            <strong> Sources de risque</strong>
+                            <p class="small text-muted mb-0">Identifier les menaces et objectifs visés</p>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-dark">3</span>
+                            <strong> Écosystème</strong>
+                            <p class="small text-muted mb-0">Cartographier les parties prenantes</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <span class="badge bg-dark">4</span>
+                            <strong> Scénarios opérationnels</strong>
+                            <p class="small text-muted mb-0">Détailler les modes opératoires d'attaque</p>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-dark">5</span>
+                            <strong> Traitement du risque</strong>
+                            <p class="small text-muted mb-0">Définir les mesures de sécurité</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-4 mb-0">
+                    <i class="bi bi-lightbulb"></i>
+                    <strong>Conseil :</strong> Vous pouvez utiliser l'interface web (actuelle) ou 
+                    le mode CLI en lançant <code>python3 app_interactive.py</code>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

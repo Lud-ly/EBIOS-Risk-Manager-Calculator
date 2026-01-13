@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block title %}Atelier 1 - Cadrage{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Accueil</a></li>
+                <li class="breadcrumb-item active">Atelier 1</li>
+            </ol>
+        </nav>
+
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h2 class="mb-0">
+                    <i class="bi bi-1-circle"></i> Atelier 1 - Cadrage et socle de sécurité
+                </h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('atelier1') }}">
+                    
+                    <!-- SECTION 1: Métadonnées -->
+                    <div class="form-section">
+                        <h4><i class="bi bi-building text-dark"></i> Informations générales</h4>
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nom de l'organisation *</label>
+                                <input type="text" name="organisme" class="form-control" required
+                                       placeholder="Ex: TechCorp SAS">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Responsable de l'étude *</label>
+                                <input type="text" name="responsable" class="form-control" required
+                                       placeholder="Ex: Jean Dupont - RSSI">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Périmètre de l'étude *</label>
+                            <textarea name="perimetre" class="form-control" rows="2" required
+                                      placeholder="Ex: Système d'information métier et infrastructure cloud"></textarea>
+                            <div class="form-text">Décrivez le périmètre technique et organisationnel</div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2: Missions critiques -->
+                    <div class="form-section">
+                        <h4><i class="bi bi-target text-dark"></i> Missions critiques</h4>
+                        <hr>
+                        <p class="text-muted">Identifiez les missions essentielles de votre organisation</p>
+                        
+                        <div id="missions-container">
+                            <div class="mission-row border rounded p-3 mb-3" style="background-color: #f8f9fa;">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label class="form-label">Nom de la mission</label>
+                                        <input type="text" name="mission_nom" class="form-control"
+                                               placeholder="Ex: Assurer la continuité de service 24/7">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label">Description</label>
+                                        <input type="text" name="mission_desc" class="form-control"
+                                               placeholder="Garantir la disponibilité...">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Criticité</label>
+                                        <select name="mission_criticite" class="form-select">
+                                            <option value="1">1 - Faible</option>
+                                            <option value="2">2 - Moyenne</option>
+                                            <option value="3">3 - Importante</option>
+                                            <option value="4" selected>4 - Critique</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-dark btn-sm" onclick="ajouterMission()">
+                            <i class="bi bi-plus-circle"></i> Ajouter une mission
+                        </button>
+                    </div>
+
+                    <!-- SECTION 3: Valeurs métier -->
+                    <div class="form-section">
+                        <h4><i class="bi bi-gem text-dark"></i> Valeurs métier (actifs essentiels)</h4>
+                        <hr>
+                        <p class="text-muted">Identifiez les données, services et processus critiques</p>
+                        
+                        <div id="valeurs-container">
+                            <div class="valeur-row border rounded p-3 mb-3" style="background-color: #f8f9fa;">
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nom de la valeur métier</label>
+                                        <input type="text" name="valeur_nom" class="form-control"
+                                               placeholder="Ex: Base de données clients">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Type</label>
+                                        <select name="valeur_type" class="form-select">
+                                            <option value="Information">Information</option>
+                                            <option value="Service">Service</option>
+                                            <option value="Processus">Processus</option>
+                                            <option value="Autre">Autre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">D (Disponibilité)</label>
+                                        <select name="valeur_d" class="form-select form-select-sm">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">I (Intégrité)</label>
+                                        <select name="valeur_i" class="form-select form-select-sm">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">C (Confidentialité)</label>
+                                        <select name="valeur_c" class="form-select form-select-sm">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">T (Traçabilité)</label>
+                                        <select name="valeur_t" class="form-select form-select-sm">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-dark btn-sm" onclick="ajouterValeur()">
+                            <i class="bi bi-plus-circle"></i> Ajouter une valeur métier
+                        </button>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+                        <button type="submit" class="btn btn-dark btn-lg">
+                            Sauvegarder et continuer <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function ajouterMission() {
+    const container = document.getElementById('missions-container');
+    const newMission = `
+        <div class="mission-row border rounded p-3 mb-3" style="background-color: #f8f9fa;">
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="form-label">Nom de la mission</label>
+                    <input type="text" name="mission_nom" class="form-control">
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Description</label>
+                    <input type="text" name="mission_desc" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Criticité</label>
+                    <select name="mission_criticite" class="form-select">
+                        <option value="1">1 - Faible</option>
+                        <option value="2">2 - Moyenne</option>
+                        <option value="3">3 - Importante</option>
+                        <option value="4" selected>4 - Critique</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newMission);
+}
+
+function ajouterValeur() {
+    const container = document.getElementById('valeurs-container');
+    const newValeur = `
+        <div class="valeur-row border rounded p-3 mb-3" style="background-color: #f8f9fa;">
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label class="form-label">Nom de la valeur métier</label>
+                    <input type="text" name="valeur_nom" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Type</label>
+                    <select name="valeur_type" class="form-select">
+                        <option value="Information">Information</option>
+                        <option value="Service">Service</option>
+                        <option value="Processus">Processus</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">D (Disponibilité)</label>
+                    <select name="valeur_d" class="form-select form-select-sm">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">I (Intégrité)</label>
+                    <select name="valeur_i" class="form-select form-select-sm">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">C (Confidentialité)</label>
+                    <select name="valeur_c" class="form-select form-select-sm">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">T (Traçabilité)</label>
+                    <select name="valeur_t" class="form-select form-select-sm">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newValeur);
+}
+</script>
+{% endblock %}

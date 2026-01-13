@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+
+{% block title %}Atelier 5 - Traitement{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('atelier2') }}">Atelier 2</a></li>
+                <li class="breadcrumb-item active">Atelier 5</li>
+            </ol>
+        </nav>
+
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h2 class="mb-0">
+                    <i class="bi bi-5-circle"></i> Atelier 5 - Traitement du risque
+                </h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('atelier5') }}">
+                    
+                    <!-- SECTION 1: Risques à traiter -->
+                    <div class="form-section">
+                        <h4><i class="bi bi-exclamation-triangle text-danger"></i> Risques identifiés</h4>
+                        <hr>
+                        <p class="text-muted">Listez les risques cyber à traiter et évaluez-les</p>
+                        
+                        <div id="risques-container">
+                            <div class="risque-row border rounded p-3 mb-3" style="background-color: #ffebee;">
+                                <div class="row mb-3">
+                                    <div class="col-md-7">
+                                        <label class="form-label">Nom du risque</label>
+                                        <input type="text" name="risque_nom" class="form-control"
+                                               placeholder="Ex: Fuite de données clients via ransomware">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Gravité</label>
+                                        <select name="risque_gravite" class="form-select">
+                                            <option value="1">1 - Faible</option>
+                                            <option value="2">2 - Moyenne</option>
+                                            <option value="3">3 - Forte</option>
+                                            <option value="4" selected>4 - Critique</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Vraisemblance</label>
+                                        <select name="risque_vraisemblance" class="form-select">
+                                            <option value="1">1 - Improbable</option>
+                                            <option value="2">2 - Possible</option>
+                                            <option value="3" selected>3 - Probable</option>
+                                            <option value="4">4 - Très probable</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Option de traitement</label>
+                                        <div class="btn-group w-100" role="group">
+                                            <input type="radio" class="btn-check" name="risque_traitement" 
+                                                   value="Atténuation" id="traitement_att_1" checked>
+                                            <label class="btn btn-outline-success" for="traitement_att_1">
+                                                <i class="bi bi-shield-check"></i> Atténuation
+                                            </label>
+                                            
+                                            <input type="radio" class="btn-check" name="risque_traitement" 
+                                                   value="Évitement" id="traitement_ev_1">
+                                            <label class="btn btn-outline-warning" for="traitement_ev_1">
+                                                <i class="bi bi-x-circle"></i> Évitement
+                                            </label>
+                                            
+                                            <input type="radio" class="btn-check" name="risque_traitement" 
+                                                   value="Transfert" id="traitement_tr_1">
+                                            <label class="btn btn-outline-info" for="traitement_tr_1">
+                                                <i class="bi bi-arrow-right-circle"></i> Transfert
+                                            </label>
+                                            
+                                            <input type="radio" class="btn-check" name="risque_traitement" 
+                                                   value="Acceptation" id="traitement_acc_1">
+                                            <label class="btn btn-outline-danger" for="traitement_acc_1">
+                                                <i class="bi bi-check-circle"></i> Acceptation
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="ajouterRisque()">
+                            <i class="bi bi-plus-circle"></i> Ajouter un risque
+                        </button>
+                    </div>
+
+                    <!-- SECTION 2: Mesures de sécurité -->
+                    <div class="form-section">
+                        <h4><i class="bi bi-shield-check text-success"></i> Mesures de sécurité</h4>
+                        <hr>
+                        <p class="text-muted">Définissez les mesures de sécurité à mettre en place</p>
+                        
+                        <div id="mesures-container">
+                            <div class="mesure-row border rounded p-3 mb-3" style="background-color: #e8f5e9;">
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nom de la mesure</label>
+                                        <input type="text" name="mesure_nom" class="form-control"
+                                               placeholder="Ex: Déploiement EDR sur tous les postes">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Type</label>
+                                        <select name="mesure_type" class="form-select">
+                                            <option value="Préventif" selected>Préventif</option>
+                                            <option value="Détection">Détection</option>
+                                            <option value="Protection">Protection</option>
+                                            <option value="Réponse">Réponse</option>
+                                            <option value="Récupération">Récupération</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Coût (€)</label>
+                                        <input type="number" name="mesure_cout" class="form-control" 
+                                               placeholder="15000" value="0">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Description / Justification</label>
+                                        <input type="text" name="mesure_desc" class="form-control"
+                                               placeholder="Protection endpoint contre les malwares et ransomwares">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-success btn-sm" onclick="ajouterMesure()">
+                            <i class="bi bi-plus-circle"></i> Ajouter une mesure
+                        </button>
+                        
+                        {% if mesures_templates %}
+                        <button type="button" class="btn btn-outline-dark btn-sm ms-2" 
+                                data-bs-toggle="modal" data-bs-target="#mesuresTemplateModal">
+                            <i class="bi bi-collection"></i> Bibliothèque de mesures
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('atelier2') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-check-circle"></i> Terminer l'analyse
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Calculateur de risque -->
+        <div class="card mt-4 border-info">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-calculator"></i> Calculateur de risque rapide</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label class="form-label">Gravité</label>
+                        <select id="calc_gravite" class="form-select">
+                            <option value="1">1 - Négligeable</option>
+                            <option value="2">2 - Limitée</option>
+                            <option value="3">3 - Importante</option>
+                            <option value="4">4 - Critique</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label">Vraisemblance</label>
+                        <select id="calc_vraisemblance" class="form-select">
+                            <option value="1">1 - Improbable</option>
+                            <option value="2">2 - Possible</option>
+                            <option value="3">3 - Probable</option>
+                            <option value="4">4 - Très probable</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button class="btn btn-info w-100" onclick="calculerRisque()">Calculer</button>
+                    </div>
+                </div>
+                <div id="resultat_risque" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Bibliothèque de mesures -->
+{% if mesures_templates %}
+<div class="modal fade" id="mesuresTemplateModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-collection"></i> Bibliothèque de mesures EBIOS RM</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    {% for mesure in mesures_templates[:10] %}
+                    <a href="#" class="list-group-item list-group-item-action" 
+                       onclick="appliquerMesure('{{ mesure.nom }}', '{{ mesure.type }}'); return false;">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ mesure.nom }}</h6>
+                            <small class="badge bg-dark">{{ mesure.type }}</small>
+                        </div>
+                        <p class="mb-1 small">{{ mesure.description[:80] }}...</p>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let risqueCounter = 1;
+
+function ajouterRisque() {
+    risqueCounter++;
+    const container = document.getElementById('risques-container');
+    const newRisque = `
+        <div class="risque-row border rounded p-3 mb-3" style="background-color: #ffebee;">
+            <div class="row mb-3">
+                <div class="col-md-7">
+                    <label class="form-label">Nom du risque</label>
+                    <input type="text" name="risque_nom" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Gravité</label>
+                    <select name="risque_gravite" class="form-select">
+                        <option value="1">1 - Faible</option>
+                        <option value="2">2 - Moyenne</option>
+                        <option value="3">3 - Forte</option>
+                        <option value="4" selected>4 - Critique</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Vraisemblance</label>
+                    <select name="risque_vraisemblance" class="form-select">
+                        <option value="1">1 - Improbable</option>
+                        <option value="2">2 - Possible</option>
+                        <option value="3" selected>3 - Probable</option>
+                        <option value="4">4 - Très probable</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label">Option de traitement</label>
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="risque_traitement" 
+                               value="Atténuation" id="traitement_att_${risqueCounter}" checked>
+                        <label class="btn btn-outline-success" for="traitement_att_${risqueCounter}">
+                            <i class="bi bi-shield-check"></i> Atténuation
+                        </label>
+                        <input type="radio" class="btn-check" name="risque_traitement" 
+                               value="Évitement" id="traitement_ev_${risqueCounter}">
+                        <label class="btn btn-outline-warning" for="traitement_ev_${risqueCounter}">
+                            <i class="bi bi-x-circle"></i> Évitement
+                        </label>
+                        <input type="radio" class="btn-check" name="risque_traitement" 
+                               value="Transfert" id="traitement_tr_${risqueCounter}">
+                        <label class="btn btn-outline-info" for="traitement_tr_${risqueCounter}">
+                            <i class="bi bi-arrow-right-circle"></i> Transfert
+                        </label>
+                        <input type="radio" class="btn-check" name="risque_traitement" 
+                               value="Acceptation" id="traitement_acc_${risqueCounter}">
+                        <label class="btn btn-outline-danger" for="traitement_acc_${risqueCounter}">
+                            <i class="bi bi-check-circle"></i> Acceptation
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newRisque);
+}
+
+function ajouterMesure() {
+    const container = document.getElementById('mesures-container');
+    const newMesure = `
+        <div class="mesure-row border rounded p-3 mb-3" style="background-color: #e8f5e9;">
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label class="form-label">Nom de la mesure</label>
+                    <input type="text" name="mesure_nom" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Type</label>
+                    <select name="mesure_type" class="form-select">
+                        <option value="Préventif" selected>Préventif</option>
+                        <option value="Détection">Détection</option>
+                        <option value="Protection">Protection</option>
+                        <option value="Réponse">Réponse</option>
+                        <option value="Récupération">Récupération</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Coût (€)</label>
+                    <input type="number" name="mesure_cout" class="form-control" value="0">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label">Description / Justification</label>
+                    <input type="text" name="mesure_desc" class="form-control">
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newMesure);
+}
+
+function calculerRisque() {
+    const gravite = document.getElementById('calc_gravite').value;
+    const vraisemblance = document.getElementById('calc_vraisemblance').value;
+    
+    fetch('/api/calculate_risk', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({gravite: gravite, vraisemblance: vraisemblance})
+    })
+    .then(response => response.json())
+    .then(data => {
+        const colors = {
+            'CRITIQUE': 'danger',
+            'ÉLEVÉ': 'warning',
+            'MOYEN': 'info',
+            'FAIBLE': 'success'
+        };
+        document.getElementById('resultat_risque').innerHTML = `
+            <div class="alert alert-${colors[data.niveau]} mb-0">
+                <strong>Niveau de risque : ${data.niveau}</strong> (Score: ${data.score}/4)
+            </div>
+        `;
+    });
+}
+
+function appliquerMesure(nom, type) {
+    const container = document.getElementById('mesures-container');
+    const newMesure = `
+        <div class="mesure-row border rounded p-3 mb-3" style="background-color: #e8f5e9;">
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label class="form-label">Nom de la mesure</label>
+                    <input type="text" name="mesure_nom" class="form-control" value="${nom}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Type</label>
+                    <select name="mesure_type" class="form-select">
+                        <option value="Préventif" ${type === 'Préventif' ? 'selected' : ''}>Préventif</option>
+                        <option value="Détection" ${type === 'Détection' ? 'selected' : ''}>Détection</option>
+                        <option value="Protection" ${type === 'Protection' ? 'selected' : ''}>Protection</option>
+                        <option value="Réponse" ${type === 'Réponse' ? 'selected' : ''}>Réponse</option>
+                        <option value="Récupération" ${type === 'Récupération' ? 'selected' : ''}>Récupération</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Coût (€)</label>
+                    <input type="number" name="mesure_cout" class="form-control" value="0">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label">Description / Justification</label>
+                    <input type="text" name="mesure_desc" class="form-control">
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newMesure);
+    
+    // Fermer le modal
+    bootstrap.Modal.getInstance(document.getElementById('mesuresTemplateModal')).hide();
+}
+</script>
+{% endblock %}

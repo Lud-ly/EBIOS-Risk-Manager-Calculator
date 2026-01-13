@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}Atelier 2 - Sources de risque{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('atelier1') }}">Atelier 1</a></li>
+                <li class="breadcrumb-item active">Atelier 2</li>
+            </ol>
+        </nav>
+
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h2 class="mb-0">
+                    <i class="bi bi-2-circle"></i> Atelier 2 - Sources de risque et objectifs visés
+                </h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('atelier2') }}">
+                    
+                    <!-- SECTION 1: Sources de risque -->
+                    <div class="form-section">
+                        <h4><i class="bi bi-person-x text-danger"></i> Sources de risque (attaquants)</h4>
+                        <hr>
+                        <p class="text-muted">Identifiez les acteurs malveillants potentiels</p>
+                        
+                        <div id="sources-container">
+                            <div class="source-row border rounded p-3 mb-3" style="background-color: #fff3cd;">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nom de la source de risque</label>
+                                        <input type="text" name="sr_nom" class="form-control"
+                                               placeholder="Ex: Groupe APT28">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Type</label>
+                                        <select name="sr_type" class="form-select">
+                                            {% for type_sr in types_sr %}
+                                            <option value="{{ type_sr }}">{{ type_sr }}</option>
+                                            {% endfor %}
+                                            <option value="Autre">Autre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Ressources (1-4)</label>
+                                        <select name="sr_ressources" class="form-select">
+                                            <option value="1">1 - Limitées</option>
+                                            <option value="2">2 - Moyennes</option>
+                                            <option value="3" selected>3 - Importantes</option>
+                                            <option value="4">4 - Très importantes</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Détermination (1-4)</label>
+                                        <select name="sr_determination" class="form-select">
+                                            <option value="1">1 - Faible</option>
+                                            <option value="2">2 - Moyenne</option>
+                                            <option value="3" selected>3 - Forte</option>
+                                            <option value="4">4 - Très forte</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Compétences (1-4)</label>
+                                        <select name="sr_competences" class="form-select">
+                                            <option value="1">1 - Basiques</option>
+                                            <option value="2">2 - Intermédiaires</option>
+                                            <option value="3" selected>3 - Avancées</option>
+                                            <option value="4">4 - Expert</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="ajouterSource()">
+                            <i class="bi bi-plus-circle"></i> Ajouter une source de risque
+                        </button>
+                    </div>
+
+                    <!-- SECTION 2: Objectifs visés -->
+                    <div class="form-section">
+                        <h4><i class="bi bi-bullseye text-warning"></i> Objectifs visés (OV)</h4>
+                        <hr>
+                        <p class="text-muted">Identifiez ce que les attaquants cherchent à accomplir</p>
+                        
+                        <div id="objectifs-container">
+                            <div class="objectif-row border rounded p-3 mb-3" style="background-color: #fff3cd;">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label class="form-label">Nom de l'objectif visé</label>
+                                        <input type="text" name="ov_nom" class="form-control"
+                                               placeholder="Ex: Vol de données sensibles">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label">Description</label>
+                                        <input type="text" name="ov_desc" class="form-control"
+                                               placeholder="Dérober les informations clients">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Impact (1-4)</label>
+                                        <select name="ov_impact" class="form-select">
+                                            <option value="1">1 - Négligeable</option>
+                                            <option value="2">2 - Limité</option>
+                                            <option value="3">3 - Important</option>
+                                            <option value="4" selected>4 - Critique</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-warning btn-sm" onclick="ajouterObjectif()">
+                            <i class="bi bi-plus-circle"></i> Ajouter un objectif visé
+                        </button>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('atelier1') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+                        <button type="submit" class="btn btn-dark btn-lg">
+                            Sauvegarder et continuer <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="alert alert-info mt-4">
+            <i class="bi bi-info-circle"></i>
+            <strong>Conseil :</strong> Les scénarios stratégiques seront générés automatiquement 
+            en combinant les sources de risque avec les objectifs visés.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function ajouterSource() {
+    const container = document.getElementById('sources-container');
+    const newSource = `
+        <div class="source-row border rounded p-3 mb-3" style="background-color: #fff3cd;">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Nom de la source de risque</label>
+                    <input type="text" name="sr_nom" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Type</label>
+                    <select name="sr_type" class="form-select">
+                        {% for type_sr in types_sr %}
+                        <option value="{{ type_sr }}">{{ type_sr }}</option>
+                        {% endfor %}
+                        <option value="Autre">Autre</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Ressources (1-4)</label>
+                    <select name="sr_ressources" class="form-select">
+                        <option value="1">1 - Limitées</option>
+                        <option value="2">2 - Moyennes</option>
+                        <option value="3" selected>3 - Importantes</option>
+                        <option value="4">4 - Très importantes</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Détermination (1-4)</label>
+                    <select name="sr_determination" class="form-select">
+                        <option value="1">1 - Faible</option>
+                        <option value="2">2 - Moyenne</option>
+                        <option value="3" selected>3 - Forte</option>
+                        <option value="4">4 - Très forte</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Compétences (1-4)</label>
+                    <select name="sr_competences" class="form-select">
+                        <option value="1">1 - Basiques</option>
+                        <option value="2">2 - Intermédiaires</option>
+                        <option value="3" selected>3 - Avancées</option>
+                        <option value="4">4 - Expert</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newSource);
+}
+
+function ajouterObjectif() {
+    const container = document.getElementById('objectifs-container');
+    const newObjectif = `
+        <div class="objectif-row border rounded p-3 mb-3" style="background-color: #fff3cd;">
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="form-label">Nom de l'objectif visé</label>
+                    <input type="text" name="ov_nom" class="form-control">
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Description</label>
+                    <input type="text" name="ov_desc" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Impact (1-4)</label>
+                    <select name="ov_impact" class="form-select">
+                        <option value="1">1 - Négligeable</option>
+                        <option value="2">2 - Limité</option>
+                        <option value="3">3 - Important</option>
+                        <option value="4" selected>4 - Critique</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newObjectif);
+}
+</script>
+{% endblock %}
